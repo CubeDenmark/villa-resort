@@ -8,8 +8,8 @@ const nextConfig = {
   },
   output: 'export',
   // for github pages (github static hosting)
-  // basePath: '/villa',
-  // assetPrefix: '/villa/',
+  basePath: '/villa-resort',
+  assetPrefix: '/villa-resort/',
 }
 
 export default nextConfig
