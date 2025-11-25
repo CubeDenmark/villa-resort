@@ -26,10 +26,10 @@ export default function Experience() {
                 <span className="text-accent">✓</span>
                 <span>State-of-the-art audio and visual systems</span>
               </li>
-              <li className="flex gap-3">
+              {/* <li className="flex gap-3">
                 <span className="text-accent">✓</span>
                 <span>Professional photography and videography</span>
-              </li>
+              </li> */}
             </ul>
             <button className="bg-primary text-primary-foreground px-8 py-3 rounded-full hover:bg-primary/90 transition font-semibold">
               Plan Your Event
