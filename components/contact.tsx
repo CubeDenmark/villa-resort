@@ -8,12 +8,17 @@ import { useRouter } from "next/navigation"
 
 export default function Contact() {
   const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     formData.append("access_key", "deceb57e-255f-40e3-b500-5daf08665a53");
+
+    if (loading) return; // Prevent spamming
+    setLoading(true);
 
     const response = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
@@ -22,8 +27,15 @@ export default function Contact() {
 
     const data = await response.json();
     setResult(data.success ? "Success!" : "Error");
-    
-    router.push("http://192.168.56.1:3000/");
+
+     if (data.success) {
+      setSuccess(true);
+      setLoading(false);
+      router.push("/success");
+    } else {
+      alert("Something went wrong. Try again.");
+      setLoading(false);
+    }
   };
 
   return (
