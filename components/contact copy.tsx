@@ -4,27 +4,34 @@ import type React from "react"
 
 import { MapPin, Phone, Mail, Calendar } from "lucide-react"
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 
 export default function Contact() {
-  const [result, setResult] = useState("");
-  const router = useRouter();
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    eventDate: "",
+    message: "",
+  })
 
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    formData.append("access_key", "deceb57e-255f-40e3-b500-5daf08665a53");
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
-    const response = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await response.json();
-    setResult(data.success ? "Success!" : "Error");
-    
-    router.push("http://192.168.56.1:3000/");
-  };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log("Form submitted:", formData)
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      eventDate: "",
+      message: "",
+    })
+  }
 
   return (
     <section id="contact" className="py-20 px-6 bg-secondary/20">
@@ -74,12 +81,14 @@ export default function Contact() {
             <div className="grid grid-cols-2 gap-4">
               <input
                 type="text"
-                name="name"
-                placeholder="Name"
+                name="firstName"
+                placeholder="First Name"
+                value={formData.firstName}
+                onChange={handleChange}
                 className="bg-background border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition"
                 required
               />
-              {/* <input
+              <input
                 type="text"
                 name="lastName"
                 placeholder="Last Name"
@@ -87,18 +96,20 @@ export default function Contact() {
                 onChange={handleChange}
                 className="bg-background border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition"
                 required
-              /> */}
+              />
             </div>
 
             <input
               type="email"
               name="email"
               placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
               className="w-full bg-background border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition"
               required
             />
 
-            {/* <input
+            <input
               type="tel"
               name="phone"
               placeholder="Phone"
@@ -113,22 +124,17 @@ export default function Contact() {
               value={formData.eventDate}
               onChange={handleChange}
               className="w-full bg-background border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition"
-            /> */}
+            />
 
             <textarea
               name="message"
               placeholder="Tell us about your event..."
+              value={formData.message}
+              onChange={handleChange}
               rows={4}
               className="w-full bg-background border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition resize-none"
               required
             />
-
-            <input 
-              type="hidden" 
-              name="redirect" 
-              value="http://192.168.56.1:3000/"
-            />
-
 
             <button
               type="submit"
@@ -136,7 +142,6 @@ export default function Contact() {
             >
               Send Message
             </button>
-            <p>{result}</p>
           </form>
         </div>
       </div>
