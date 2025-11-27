@@ -135,13 +135,6 @@ export default function Contact() {
               required
             />
 
-            <input 
-              type="hidden" 
-              name="redirect" 
-              value="http://192.168.56.1:3000/"
-            />
-
-
             <button
               type="submit"
               className="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:bg-primary/90 transition font-semibold"
