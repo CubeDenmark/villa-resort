@@ -7,9 +7,9 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'export',
-  // for github pages (github static hosting)
-  basePath: '/villa-resort',
-  assetPrefix: '/villa-resort/',
+  // // for github pages (github static hosting)
+  // basePath: '/villa-resort',
+  // assetPrefix: '/villa-resort/',
 }
 
 export default nextConfig

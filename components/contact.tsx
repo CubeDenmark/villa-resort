@@ -27,7 +27,8 @@ export default function Contact() {
 
     const formData = new FormData(event.target)
     formData.append("access_key", "deceb57e-255f-40e3-b500-5daf08665a53")
-    formData.append("h-captcha-response", captchaToken)
+     formData.append("captcha", captchaToken)
+    // formData.append("h-captcha-response", captchaToken)
 
     if (loading) return
     setLoading(true)
