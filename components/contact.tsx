@@ -1,42 +1,61 @@
 "use client"
 
-import type React from "react"
-
 import { MapPin, Phone, Mail, Calendar } from "lucide-react"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
+import HCaptcha from "@hcaptcha/react-hcaptcha"
 
 export default function Contact() {
-  const [result, setResult] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const router = useRouter();
+  const [result, setResult] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const captchaRef = useRef<any>(null)
+  const router = useRouter()
+
+  const onHCaptchaChange = (token: string | null) => {
+    setCaptchaToken(token)
+  }
 
   const handleSubmit = async (event: any) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    formData.append("access_key", "deceb57e-255f-40e3-b500-5daf08665a53");
+    event.preventDefault()
 
-    if (loading) return; // Prevent spamming
-    setLoading(true);
+    if (!captchaToken) {
+      alert("Please verify the CAPTCHA")
+      return
+    }
+
+    const formData = new FormData(event.target)
+    formData.append("access_key", "deceb57e-255f-40e3-b500-5daf08665a53")
+    formData.append("h-captcha-response", captchaToken)
+
+    if (loading) return
+    setLoading(true)
 
     const response = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
-      body: formData
-    });
+      body: formData,
+    })
 
-    const data = await response.json();
-    setResult(data.success ? "Success!" : "Error");
+    const data = await response.json()
+    setResult(data.success ? "Success!" : "Error")
 
-     if (data.success) {
-      setSuccess(true);
-      setLoading(false);
-      router.push("/success");
+    if (data.success) {
+      setSuccess(true)
+      setLoading(false)
+      if (captchaRef.current) {
+        captchaRef.current.resetCaptcha()
+      }
+      router.push("/success")
     } else {
-      alert("Something went wrong. Try again.");
-      setLoading(false);
+      alert("Something went wrong. Try again.")
+      setLoading(false)
+      if (captchaRef.current) {
+        captchaRef.current.resetCaptcha()
+      }
+      setCaptchaToken(null)
     }
-  };
+  }
 
   return (
     <section id="contact" className="py-20 px-6 bg-secondary/20">
@@ -91,15 +110,6 @@ export default function Contact() {
                 className="bg-background border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition"
                 required
               />
-              {/* <input
-                type="text"
-                name="lastName"
-                placeholder="Last Name"
-                value={formData.lastName}
-                onChange={handleChange}
-                className="bg-background border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition"
-                required
-              /> */}
             </div>
 
             <input
@@ -110,23 +120,6 @@ export default function Contact() {
               required
             />
 
-            {/* <input
-              type="tel"
-              name="phone"
-              placeholder="Phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full bg-background border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition"
-            />
-
-            <input
-              type="date"
-              name="eventDate"
-              value={formData.eventDate}
-              onChange={handleChange}
-              className="w-full bg-background border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition"
-            /> */}
-
             <textarea
               name="message"
               placeholder="Tell us about your event..."
@@ -135,11 +128,21 @@ export default function Contact() {
               required
             />
 
+            <div className="flex justify-center">
+              <HCaptcha
+                ref={captchaRef}
+                sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2"
+                reCaptchaCompat={false}
+                onVerify={onHCaptchaChange}
+              />
+            </div>
+
             <button
               type="submit"
-              className="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:bg-primary/90 transition font-semibold"
+              className="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:bg-primary/90 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={!captchaToken || loading}
             >
-              Send Message
+              {loading ? "Sending..." : "Send Message"}
             </button>
             <p>{result}</p>
           </form>
