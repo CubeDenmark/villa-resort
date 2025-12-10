@@ -4,7 +4,6 @@ import { MapPin, Phone, Mail, Calendar } from "lucide-react"
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import HCaptcha from "@hcaptcha/react-hcaptcha"
-import { WEB3FORMS_KEY } from "../lib/web3form";
 
 export default function Contact() {
   const [result, setResult] = useState("")
@@ -27,7 +26,7 @@ export default function Contact() {
     }
 
     const formData = new FormData(event.target)
-    formData.append("access_key", WEB3FORMS_KEY)
+    formData.append("access_key", "deceb57e-255f-40e3-b500-5daf08665a53")
      formData.append("captcha", captchaToken)
     // formData.append("h-captcha-response", captchaToken)
 
