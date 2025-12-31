@@ -144,7 +144,8 @@ export default function Contact() {
               className="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:bg-primary/90 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={!captchaToken || loading}
             >
-              {loading ? "Sending..." : "Send Message"}
+              {loading ? "Sending..." : "Send"}
+              //{loading ? "Sending..." : "Send Message"}
             </button>
             <p>{result}</p>
           </form>
