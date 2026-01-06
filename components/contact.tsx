@@ -145,7 +145,7 @@ export default function Contact() {
               disabled={!captchaToken || loading}
             >
               {loading ? "Sending..." : "Send"}
-              //{loading ? "Sending..." : "Send Message"}
+              {/* {loading ? "Sending..." : "Send Message"} */}
             </button>
             <p>{result}</p>
           </form>
